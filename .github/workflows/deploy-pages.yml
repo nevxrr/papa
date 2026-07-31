@@ -25,12 +25,12 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
-      - run: npm run build
-
-      # SPA: любые маршруты отдают index.html
-      - run: cp dist/index.html dist/404.html
-      - run: touch dist/.nojekyll
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3
         with:

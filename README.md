@@ -4,11 +4,13 @@
 
 ## Онлайн
 
-После merge в `main` сайт сам деплоится на GitHub Pages:
-
 **https://nevxrr.github.io/papa/**
 
-Один раз в репозитории: **Settings → Pages → Source → GitHub Actions**.
+Сайт собирается (Vite) и публикуется GitHub Actions при пуше в `main`.
+В Settings → Pages источник должен быть **GitHub Actions**.
+
+> Не используйте шаблон «Deploy static content» — он выкладывает исходники
+> без сборки и даёт белый экран.
 
 ## Запуск локально
 

@@ -245,6 +245,7 @@ p {
 
 .hero-copy {
   position: relative;
+  margin-top: clamp(28px, 6vw, 56px);
   padding-bottom: 8px;
   max-width: 640px;
   z-index: 3;

@@ -311,7 +311,7 @@ p {
 .hero-hand {
   position: absolute;
   left: 0;
-  top: calc(100% - 34px);
+  top: calc(100% - 22px);
   bottom: auto;
   width: min(58vw, 240px);
   pointer-events: none;
@@ -325,8 +325,8 @@ p {
   height: auto;
   max-width: none;
   background: transparent;
-  /* выше + меньший угол: кончик ровно в левый нижний угол кнопки */
-  transform: translate(-40%, -22%) rotate(-18deg);
+  /* чуть ниже + угол побольше: кончик в левый нижний угол, текст не перекрывает */
+  transform: translate(-40%, -8%) rotate(-24deg);
   transform-origin: 100% 45%;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
 }

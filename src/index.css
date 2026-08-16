@@ -303,12 +303,13 @@ p {
   transform: scale(0.985);
 }
 
-/* absolute: обрезанная кисть за левым краем, палец → низ-лево кнопки */
+/* absolute: кисть за левым краем, кончик пальца → левый нижний угол кнопки */
 .hero-hand {
   position: absolute;
-  left: -48%;
-  bottom: -72%;
-  width: min(62vw, 280px);
+  left: 0;
+  top: 100%;
+  bottom: auto;
+  width: min(68vw, 260px);
   pointer-events: none;
   z-index: 1;
   animation: float-y 5.5s ease-in-out infinite;
@@ -320,8 +321,9 @@ p {
   height: auto;
   max-width: none;
   background: transparent;
-  transform: rotate(-38deg);
-  transform-origin: 90% 10%;
+  /* сдвиг влево+вниз: палец у нижнего левого угла, обрез кисти за экраном */
+  transform: translate(-58%, 12%) rotate(-28deg);
+  transform-origin: 100% 40%;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
 }
 

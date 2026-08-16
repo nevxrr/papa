@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
 import {
   courses,
@@ -10,6 +10,28 @@ import { useStore } from '../store/StoreContext'
 function CabinetHeader({ title }: { title?: string }) {
   const { state, hasAccess, logout } = useStore()
   const level = hasAccess ? 'Ученица' : 'Новичок'
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const onPointer = (e: MouseEvent | TouchEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onPointer)
+    document.addEventListener('touchstart', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onPointer)
+      document.removeEventListener('touchstart', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
 
   return (
     <>
@@ -22,35 +44,53 @@ function CabinetHeader({ title }: { title?: string }) {
           </div>
         </div>
       </div>
-      <nav className="nav-glass nav-sticky" aria-label="Кабинет">
-        <NavLink
-          to="/cabinet"
-          end
-          className={({ isActive }) => (isActive ? 'active' : undefined)}
+      <div className="nav-sticky" ref={wrapRef}>
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-expanded={open}
+          aria-controls="cabinet-menu"
+          onClick={() => setOpen((v) => !v)}
         >
-          Обзор
-        </NavLink>
-        {hasAccess && (
-          <>
-            <NavLink
-              to="/cabinet/lessons"
-              className={({ isActive }) => (isActive ? 'active' : undefined)}
-            >
-              Уроки
-            </NavLink>
-            <NavLink
-              to="/cabinet/booking"
-              className={({ isActive }) => (isActive ? 'active' : undefined)}
-            >
-              Запись
-            </NavLink>
-          </>
-        )}
-        <Link to="/">Главная</Link>
-        <button type="button" className="nav-logout" onClick={logout}>
-          Выйти
+          {open ? 'Закрыть' : 'Меню'}
         </button>
-      </nav>
+        {open && (
+          <nav id="cabinet-menu" className="nav-glass" aria-label="Кабинет">
+            <NavLink
+              to="/cabinet"
+              end
+              className={({ isActive }) => (isActive ? 'active' : undefined)}
+              onClick={() => setOpen(false)}
+            >
+              Обзор
+            </NavLink>
+            {hasAccess && (
+              <>
+                <NavLink
+                  to="/cabinet/lessons"
+                  className={({ isActive }) => (isActive ? 'active' : undefined)}
+                  onClick={() => setOpen(false)}
+                >
+                  Уроки
+                </NavLink>
+                <NavLink
+                  to="/cabinet/booking"
+                  className={({ isActive }) => (isActive ? 'active' : undefined)}
+                  onClick={() => setOpen(false)}
+                >
+                  Запись
+                </NavLink>
+              </>
+            )}
+            <Link to="/" onClick={() => setOpen(false)}>
+              Главная
+            </Link>
+            <button type="button" className="nav-logout" onClick={logout}>
+              Выйти
+            </button>
+          </nav>
+        )}
+      </div>
     </>
   )
 }

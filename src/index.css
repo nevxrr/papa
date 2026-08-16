@@ -326,7 +326,7 @@ p {
   max-width: none;
   background: transparent;
   /* чуть ниже + угол побольше: кончик в левый нижний угол, текст не перекрывает */
-  transform: translate(-40%, -8%) rotate(-24deg);
+  transform: translate(-40%, -8%) rotate(-36deg);
   transform-origin: 100% 45%;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
 }

@@ -245,6 +245,7 @@ p {
 
 .hero-copy {
   position: relative;
+  margin-top: clamp(28px, 6vw, 56px);
   padding-bottom: 8px;
   max-width: 640px;
   z-index: 3;
@@ -325,8 +326,8 @@ p {
   height: auto;
   max-width: none;
   background: transparent;
-  /* чуть ниже + угол побольше: кончик в левый нижний угол, текст не перекрывает */
-  transform: translate(-40%, -8%) rotate(-36deg);
+  /* левее: кисть дальше за край, кончик у угла кнопки */
+  transform: translate(-56%, -8%) rotate(-36deg);
   transform-origin: 100% 45%;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
 }
@@ -1000,7 +1001,7 @@ p {
   }
 
   .hero-hand img {
-    transform: translate(-36%, -6%) rotate(-34deg);
+    transform: translate(-52%, -6%) rotate(-34deg);
   }
 
   .social-figma {
@@ -1027,7 +1028,7 @@ p {
   }
 
   .hero-hand img {
-    transform: translate(-34%, -4%) rotate(-34deg);
+    transform: translate(-50%, -4%) rotate(-34deg);
   }
 }
 

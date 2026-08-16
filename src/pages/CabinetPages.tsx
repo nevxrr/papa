@@ -23,7 +23,7 @@ function CabinetHeader({ title }: { title?: string }) {
             {!title && <p className="cabinet-level">{level}</p>}
           </div>
         </div>
-        <nav className="nav-row" aria-label="Кабинет">
+        <nav className="nav-glass" aria-label="Кабинет">
           <NavLink
             to="/cabinet"
             end
@@ -65,7 +65,7 @@ function CabinetShell({
   title?: string
 }) {
   return (
-    <div className="page page-blobs cabinet-shell">
+    <div className="page cabinet-shell">
       <CabinetHeader title={title} />
       <div className="shell shell-inner cabinet-body">{children}</div>
     </div>
@@ -89,7 +89,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="page page-blobs">
+    <div className="page">
       <div className="shell">
         <form className="login-box glass-strong" onSubmit={onSubmit}>
           <Link to="/" className="logo">

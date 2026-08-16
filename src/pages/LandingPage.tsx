@@ -28,7 +28,7 @@ export function LandingPage() {
   }
 
   return (
-    <div className="page page-blobs landing" id="top">
+    <div className="page landing" id="top">
       <LandingHeader />
 
       <main>

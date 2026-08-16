@@ -27,7 +27,7 @@ export function LoginPage() {
     <div className="page page-blobs">
       <div className="shell">
         <form className="login-box glass-strong" onSubmit={onSubmit}>
-          <Link to="/" className="logo" style={{ fontSize: '2.4rem' }}>
+          <Link to="/" className="logo">
             NailCraft
           </Link>
           <h1>Личный кабинет</h1>
@@ -81,7 +81,7 @@ export function CabinetHome() {
           <p>
             Оплатите курс — и здесь появятся ближайшие занятия и онлайн-материалы.
           </p>
-          <Link to="/courses" className="btn btn-pink">
+          <Link to="/#courses" className="btn btn-pink">
             Выбрать курс
           </Link>
         </div>
@@ -165,7 +165,7 @@ export function LessonsPage() {
         <div className="lock-note glass-strong">
           <h2>Уроки закрыты</h2>
           <p>Оплатите курс, чтобы открыть онлайн-материалы.</p>
-          <Link to="/courses" className="btn btn-pink">
+          <Link to="/#courses" className="btn btn-pink">
             К курсам
           </Link>
         </div>
@@ -239,7 +239,7 @@ export function BookingPage() {
         <div className="lock-note glass-strong">
           <h2>Запись на офлайн</h2>
           <p>Доступна после оплаты курса.</p>
-          <Link to="/courses" className="btn btn-pink">
+          <Link to="/#courses" className="btn btn-pink">
             Оплатить курс
           </Link>
         </div>

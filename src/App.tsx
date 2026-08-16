@@ -1,11 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { LandingPage } from './pages/LandingPage'
 import {
-  ContactsPage,
-  CoursesPage,
-  ReviewsPage,
-} from './pages/SitePages'
-import {
   BookingPage,
   CabinetHome,
   CabinetLayout,
@@ -17,9 +12,6 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/courses" element={<CoursesPage />} />
-      <Route path="/reviews" element={<ReviewsPage />} />
-      <Route path="/contacts" element={<ContactsPage />} />
       <Route path="/cabinet/login" element={<LoginPage />} />
       <Route path="/cabinet" element={<CabinetLayout />}>
         <Route index element={<CabinetHome />} />

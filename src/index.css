@@ -1000,7 +1000,7 @@ p {
   }
 
   .hero-hand img {
-    transform: translate(-36%, -6%) rotate(-22deg);
+    transform: translate(-36%, -6%) rotate(-34deg);
   }
 
   .social-figma {
@@ -1027,7 +1027,7 @@ p {
   }
 
   .hero-hand img {
-    transform: translate(-34%, -4%) rotate(-22deg);
+    transform: translate(-34%, -4%) rotate(-34deg);
   }
 }
 

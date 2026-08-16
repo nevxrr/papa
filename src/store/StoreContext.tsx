@@ -7,242 +7,143 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import { seedState } from '../data/seed'
-import type {
-  AppState,
-  ChecklistStageId,
-  Material,
-  Order,
-  OrderStatus,
-} from '../types'
-import { createEmptyChecklist } from '../types'
 
-const STORAGE_KEY = 'stropa-production-v1'
+const STORAGE_KEY = 'nailcraft-v1'
 
-function loadState(): AppState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as AppState
-      if (parsed.orders && parsed.materials && parsed.employees) {
-        return parsed
-      }
-    }
-  } catch {
-    /* ignore */
-  }
-  return structuredClone(seedState)
+interface Booking {
+  slotId: string
+  name: string
+  phone: string
+  createdAt: string
 }
 
-function saveState(state: AppState) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+interface AppState {
+  userName: string
+  enrolledCourseIds: string[]
+  bookings: Booking[]
+  lessonProgress: Record<string, boolean>
 }
 
 interface StoreApi {
   state: AppState
-  lowStock: Material[]
-  activeOrders: Order[]
-  getOrder: (id: string) => Order | undefined
-  updateOrderStatus: (id: string, status: OrderStatus) => void
-  updateAssignee: (id: string, assignee: string) => void
-  toggleChecklist: (orderId: string, stageId: ChecklistStageId) => void
-  setStagePhoto: (
-    orderId: string,
-    stageId: ChecklistStageId,
-    photoDataUrl: string | undefined,
-  ) => void
-  addOrder: (input: Omit<Order, 'id' | 'number' | 'createdAt' | 'checklist' | 'status'> & {
-    status?: OrderStatus
-  }) => Order
-  adjustMaterial: (id: string, delta: number) => void
-  setMaterialQuantity: (id: string, quantity: number) => void
-  resetDemo: () => void
+  isLoggedIn: boolean
+  hasAccess: boolean
+  login: (name: string) => void
+  logout: () => void
+  enroll: (courseId: string) => void
+  isEnrolled: (courseId: string) => boolean
+  bookSlot: (slotId: string, name: string, phone: string) => void
+  hasBooking: (slotId: string) => boolean
+  toggleLesson: (lessonId: string) => void
 }
 
-const StoreContext = createContext<StoreApi | null>(null)
-
-function nextOrderNumber(orders: Order[]): string {
-  const nums = orders.map((o) => {
-    const m = o.number.match(/(\d+)$/)
-    return m ? Number(m[1]) : 0
-  })
-  const max = nums.length ? Math.max(...nums) : 1000
-  return `ОШ-${max + 1}`
+const defaultState: AppState = {
+  userName: '',
+  enrolledCourseIds: [],
+  bookings: [],
+  lessonProgress: {},
 }
+
+function load(): AppState {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) return { ...defaultState, ...JSON.parse(raw) }
+  } catch {
+    /* ignore */
+  }
+  return { ...defaultState }
+}
+
+const Ctx = createContext<StoreApi | null>(null)
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AppState>(loadState)
+  const [state, setState] = useState<AppState>(load)
 
   useEffect(() => {
-    saveState(state)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   }, [state])
 
-  const lowStock = useMemo(
-    () => state.materials.filter((m) => m.quantity <= m.minQuantity),
-    [state.materials],
-  )
+  const login = useCallback((name: string) => {
+    setState((s) => ({ ...s, userName: name.trim() || 'Ученица' }))
+  }, [])
 
-  const activeOrders = useMemo(
-    () => state.orders.filter((o) => o.status !== 'shipped'),
-    [state.orders],
-  )
+  const logout = useCallback(() => {
+    setState(defaultState)
+  }, [])
 
-  const getOrder = useCallback(
-    (id: string) => state.orders.find((o) => o.id === id),
-    [state.orders],
-  )
-
-  const updateOrderStatus = useCallback((id: string, status: OrderStatus) => {
-    setState((prev) => ({
-      ...prev,
-      orders: prev.orders.map((o) => (o.id === id ? { ...o, status } : o)),
+  const enroll = useCallback((courseId: string) => {
+    setState((s) => ({
+      ...s,
+      userName: s.userName || 'Ученица',
+      enrolledCourseIds: s.enrolledCourseIds.includes(courseId)
+        ? s.enrolledCourseIds
+        : [...s.enrolledCourseIds, courseId],
     }))
   }, [])
 
-  const updateAssignee = useCallback((id: string, assignee: string) => {
-    setState((prev) => ({
-      ...prev,
-      orders: prev.orders.map((o) => (o.id === id ? { ...o, assignee } : o)),
-    }))
-  }, [])
-
-  const toggleChecklist = useCallback(
-    (orderId: string, stageId: ChecklistStageId) => {
-      setState((prev) => ({
-        ...prev,
-        orders: prev.orders.map((o) => {
-          if (o.id !== orderId) return o
-          return {
-            ...o,
-            checklist: o.checklist.map((s) => {
-              if (s.id !== stageId) return s
-              const done = !s.done
-              return {
-                ...s,
-                done,
-                doneAt: done ? new Date().toISOString() : undefined,
-              }
-            }),
-            status:
-              o.status === 'accepted'
-                ? 'in_progress'
-                : o.status,
-          }
-        }),
-      }))
-    },
-    [],
+  const isEnrolled = useCallback(
+    (courseId: string) => state.enrolledCourseIds.includes(courseId),
+    [state.enrolledCourseIds],
   )
 
-  const setStagePhoto = useCallback(
-    (
-      orderId: string,
-      stageId: ChecklistStageId,
-      photoDataUrl: string | undefined,
-    ) => {
-      setState((prev) => ({
-        ...prev,
-        orders: prev.orders.map((o) => {
-          if (o.id !== orderId) return o
-          return {
-            ...o,
-            checklist: o.checklist.map((s) =>
-              s.id === stageId ? { ...s, photoDataUrl } : s,
-            ),
-          }
-        }),
-      }))
-    },
-    [],
-  )
-
-  const addOrder = useCallback(
-    (
-      input: Omit<Order, 'id' | 'number' | 'createdAt' | 'checklist' | 'status'> & {
-        status?: OrderStatus
-      },
-    ) => {
-      const order: Order = {
-        ...input,
-        id: `ord-${Date.now()}`,
-        number: nextOrderNumber(state.orders),
-        createdAt: new Date().toISOString(),
-        checklist: createEmptyChecklist(),
-        status: input.status ?? 'accepted',
+  const bookSlot = useCallback((slotId: string, name: string, phone: string) => {
+    setState((s) => {
+      if (s.bookings.some((b) => b.slotId === slotId)) return s
+      return {
+        ...s,
+        bookings: [
+          ...s.bookings,
+          { slotId, name, phone, createdAt: new Date().toISOString() },
+        ],
       }
-      setState((prev) => ({
-        ...prev,
-        orders: [order, ...prev.orders],
-      }))
-      return order
-    },
-    [state.orders],
+    })
+  }, [])
+
+  const hasBooking = useCallback(
+    (slotId: string) => state.bookings.some((b) => b.slotId === slotId),
+    [state.bookings],
   )
 
-  const adjustMaterial = useCallback((id: string, delta: number) => {
-    setState((prev) => ({
-      ...prev,
-      materials: prev.materials.map((m) =>
-        m.id === id
-          ? { ...m, quantity: Math.max(0, m.quantity + delta) }
-          : m,
-      ),
+  const toggleLesson = useCallback((lessonId: string) => {
+    setState((s) => ({
+      ...s,
+      lessonProgress: {
+        ...s.lessonProgress,
+        [lessonId]: !s.lessonProgress[lessonId],
+      },
     }))
   }, [])
 
-  const setMaterialQuantity = useCallback((id: string, quantity: number) => {
-    setState((prev) => ({
-      ...prev,
-      materials: prev.materials.map((m) =>
-        m.id === id ? { ...m, quantity: Math.max(0, quantity) } : m,
-      ),
-    }))
-  }, [])
-
-  const resetDemo = useCallback(() => {
-    const fresh = structuredClone(seedState)
-    setState(fresh)
-    saveState(fresh)
-  }, [])
-
-  const api = useMemo(
+  const api = useMemo<StoreApi>(
     () => ({
       state,
-      lowStock,
-      activeOrders,
-      getOrder,
-      updateOrderStatus,
-      updateAssignee,
-      toggleChecklist,
-      setStagePhoto,
-      addOrder,
-      adjustMaterial,
-      setMaterialQuantity,
-      resetDemo,
+      isLoggedIn: Boolean(state.userName),
+      hasAccess: state.enrolledCourseIds.length > 0,
+      login,
+      logout,
+      enroll,
+      isEnrolled,
+      bookSlot,
+      hasBooking,
+      toggleLesson,
     }),
     [
       state,
-      lowStock,
-      activeOrders,
-      getOrder,
-      updateOrderStatus,
-      updateAssignee,
-      toggleChecklist,
-      setStagePhoto,
-      addOrder,
-      adjustMaterial,
-      setMaterialQuantity,
-      resetDemo,
+      login,
+      logout,
+      enroll,
+      isEnrolled,
+      bookSlot,
+      hasBooking,
+      toggleLesson,
     ],
   )
 
-  return (
-    <StoreContext.Provider value={api}>{children}</StoreContext.Provider>
-  )
+  return <Ctx.Provider value={api}>{children}</Ctx.Provider>
 }
 
 export function useStore() {
-  const ctx = useContext(StoreContext)
-  if (!ctx) throw new Error('useStore must be used within StoreProvider')
+  const ctx = useContext(Ctx)
+  if (!ctx) throw new Error('useStore outside provider')
   return ctx
 }

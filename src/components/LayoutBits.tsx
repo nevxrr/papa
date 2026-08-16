@@ -23,13 +23,11 @@ export function LandingHeader() {
         <a href="#top" className="logo">
           NailCraft
         </a>
-        <nav className="nav-row" aria-label="Разделы">
+        <nav className="nav-glass" aria-label="Разделы">
           <a href="#courses">Курсы</a>
           <a href="#reviews">Отзывы</a>
           <a href="#contacts">Контакты</a>
-          <NavLink to="/cabinet" className="cabinet-link">
-            Кабинет
-          </NavLink>
+          <NavLink to="/cabinet">Кабинет</NavLink>
         </nav>
       </div>
     </header>
@@ -45,19 +43,17 @@ export function PageChrome({
 }) {
   const scrolled = useScrolled()
   return (
-    <div className="page page-blobs">
+    <div className="page">
       <header className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="landing-header-inner">
           <Link to="/" className="logo">
             NailCraft
           </Link>
-          <nav className="nav-row" aria-label="Разделы">
+          <nav className="nav-glass" aria-label="Разделы">
             <Link to="/#courses">Курсы</Link>
             <Link to="/#reviews">Отзывы</Link>
             <Link to="/#contacts">Контакты</Link>
-            <NavLink to="/cabinet" className="cabinet-link">
-              Кабинет
-            </NavLink>
+            <NavLink to="/cabinet">Кабинет</NavLink>
           </nav>
         </div>
       </header>

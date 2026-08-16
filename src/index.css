@@ -244,7 +244,7 @@ p {
 
 .hero-copy {
   position: relative;
-  padding-bottom: clamp(120px, 18vw, 200px);
+  padding-bottom: 8px;
   max-width: 640px;
   z-index: 3;
 }
@@ -269,13 +269,21 @@ p {
   line-height: 1.45;
 }
 
+.cta-wrap {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: clamp(22px, 3vw, 36px);
+  margin-bottom: clamp(48px, 10vw, 96px);
+}
+
 .cta-figma {
   position: relative;
   z-index: 4;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: clamp(22px, 3vw, 36px);
   min-width: min(100%, 300px);
   padding: 16px 28px;
   border: 0;
@@ -295,34 +303,26 @@ p {
   transform: scale(0.985);
 }
 
-/*
-  Figma 3:34: inner 600×334, rotate(-56.1deg).
-  Якорь у CTA: палец снизу-слева указывает на «Посмотреть курсы».
-*/
+/* absolute: обрезанная кисть за левым краем, палец → низ-лево кнопки */
 .hero-hand {
   position: absolute;
-  left: max(-14vw, -120px);
-  top: calc(100% - clamp(200px, 28vw, 280px));
-  width: min(48vw, 420px);
-  height: min(54vw, 470px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  left: -48%;
+  bottom: -72%;
+  width: min(62vw, 280px);
   pointer-events: none;
   z-index: 1;
   animation: float-y 5.5s ease-in-out infinite;
 }
 
 .hero-hand img {
-  width: min(46vw, 400px);
-  max-width: none;
+  display: block;
+  width: 100%;
   height: auto;
-  aspect-ratio: 600 / 334;
-  object-fit: cover;
+  max-width: none;
   background: transparent;
-  transform: rotate(-56.1deg);
-  transform-origin: center;
-  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.12));
+  transform: rotate(-38deg);
+  transform-origin: 90% 10%;
+  filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
 }
 
 .portrait-block {
@@ -988,19 +988,10 @@ p {
     gap: 28px;
   }
 
-  .hero-copy {
-    padding-bottom: 160px;
-  }
-
   .hero-hand {
-    left: max(-22vw, -88px);
-    top: calc(100% - 210px);
-    width: min(78vw, 320px);
-    height: min(88vw, 360px);
-  }
-
-  .hero-hand img {
-    width: min(76vw, 300px);
+    left: -55%;
+    bottom: -85%;
+    width: min(78vw, 260px);
   }
 
   .social-figma {
@@ -1021,19 +1012,10 @@ p {
     font-size: 1rem;
   }
 
-  .hero-copy {
-    padding-bottom: 140px;
-  }
-
   .hero-hand {
-    left: max(-26vw, -72px);
-    top: calc(100% - 180px);
-    width: min(84vw, 280px);
-    height: min(94vw, 320px);
-  }
-
-  .hero-hand img {
-    width: min(82vw, 260px);
+    left: -62%;
+    bottom: -90%;
+    width: min(86vw, 240px);
   }
 }
 

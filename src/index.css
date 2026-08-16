@@ -120,10 +120,11 @@ p {
   display: flex;
   align-items: center;
   min-height: 44px;
+  padding-right: 120px;
 }
 
 .cabinet-brand {
-  padding-right: 140px;
+  padding-right: 120px;
 }
 
 .logo {
@@ -137,33 +138,61 @@ p {
   white-space: nowrap;
 }
 
+.nav-sticky {
+  position: fixed;
+  top: calc(12px + var(--safe-t));
+  right: clamp(12px, 3.5vw, 28px);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.nav-toggle {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 12px 18px;
+  min-height: 44px;
+  min-width: 96px;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.75);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(16px) saturate(1.35);
+  -webkit-backdrop-filter: blur(16px) saturate(1.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 10px 24px rgba(211, 170, 206, 0.14);
+}
+
+.nav-toggle:active {
+  transform: scale(0.98);
+}
+
 .nav-glass {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 4px;
-  padding: 14px 18px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.55);
+  gap: 0;
+  padding: 8px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.58);
   backdrop-filter: blur(16px) saturate(1.35);
   -webkit-backdrop-filter: blur(16px) saturate(1.35);
   border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.8),
     0 12px 30px rgba(211, 170, 206, 0.14);
-  font-size: clamp(0.95rem, 1.7vw, 1.1rem);
+  font-size: 0.95rem;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.7);
   line-height: 1.2;
   width: max-content;
-  min-width: 132px;
-}
-
-.nav-sticky {
-  position: fixed;
-  top: calc(12px + var(--safe-t));
-  right: clamp(12px, 3.5vw, 28px);
-  z-index: 60;
+  min-width: 128px;
 }
 
 .nav-glass a,
@@ -176,14 +205,14 @@ p {
   transition: color 0.2s;
   border: 0;
   background: none;
-  padding: 8px 4px;
+  padding: 6px 4px;
   margin: 0;
   font: inherit;
   color: inherit;
   cursor: pointer;
   text-align: right;
-  min-height: 36px;
-  line-height: 1.25;
+  min-height: 32px;
+  line-height: 1.2;
 }
 
 .nav-glass a:hover,
@@ -192,10 +221,8 @@ p {
   color: #000;
 }
 
-.nav-row,
-.landing-header,
-.landing-header-inner {
-  /* legacy cleared */
+.nav-logout {
+  color: #e8a0b5 !important;
 }
 
 .shell-inner {
@@ -206,12 +233,11 @@ p {
 /* ——— Hero ——— */
 
 .hero-section {
+  position: relative;
   padding-top: 8px;
-  padding-bottom: clamp(40px, 8vw, 80px);
+  padding-bottom: clamp(48px, 9vw, 88px);
   min-height: calc(100dvh - 80px - var(--safe-t));
-  overflow: clip;
-  /* место справа под fixed nav */
-  padding-right: clamp(16px, 4vw, 32px);
+  overflow: visible;
 }
 
 .hero-layout {
@@ -219,15 +245,15 @@ p {
   grid-template-columns: 1.1fr 0.9fr;
   gap: clamp(20px, 4vw, 48px);
   align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .hero-copy {
   position: relative;
-  padding-bottom: clamp(120px, 22vw, 180px);
-  padding-right: 8px;
+  padding-bottom: 8px;
   max-width: 640px;
-  z-index: 2;
-  overflow: visible;
+  z-index: 3;
 }
 
 .hero-title {
@@ -235,7 +261,6 @@ p {
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  max-width: 16ch;
 }
 
 .hero-title .money {
@@ -277,25 +302,29 @@ p {
   transform: scale(0.985);
 }
 
+/* Палец: окно у левого края, кисть обрезана, указатель в кадре */
 .hero-hand {
   position: absolute;
-  left: -12%;
-  bottom: 0;
-  width: min(280px, 58vw);
+  left: 0;
+  bottom: 8%;
+  width: 160px;
+  height: 240px;
+  overflow: hidden;
   pointer-events: none;
   z-index: 1;
-  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.1));
   animation: float-y 5.5s ease-in-out infinite;
 }
 
 .hero-hand img {
-  width: 100%;
+  position: absolute;
+  left: -52%;
+  bottom: -5%;
+  width: 300px;
+  max-width: none;
   height: auto;
   background: transparent;
-  transform: rotate(-22deg);
-  /* кисть уходит влево за край; палец остаётся в кадре */
-  clip-path: inset(0 8% 0 28%);
-  margin-left: -18%;
+  transform: rotate(-28deg);
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.12));
 }
 
 .portrait-block {
@@ -924,26 +953,31 @@ p {
   }
 
   .landing-brand {
-    padding-right: 150px;
+    padding-right: 120px;
+  }
+
+  .nav-toggle {
+    min-height: 44px;
+    padding: 11px 16px;
   }
 
   .nav-glass {
-    padding: 12px 14px;
-    gap: 2px;
-    font-size: 0.95rem;
-    border-radius: 16px;
-    min-width: 120px;
+    padding: 6px 10px;
+    font-size: 0.92rem;
+    border-radius: 14px;
+    min-width: 118px;
   }
 
   .nav-glass a,
   .nav-glass button {
-    padding: 9px 4px;
-    min-height: 38px;
+    padding: 5px 4px;
+    min-height: 30px;
   }
 
   .hero-section {
     min-height: auto;
     padding-top: 4px;
+    padding-bottom: 56px;
   }
 
   .portrait-block {
@@ -957,28 +991,26 @@ p {
   }
 
   .hero-copy {
-    padding-bottom: 150px;
+    padding-bottom: 0;
   }
 
   .hero-hand {
-    left: -22%;
-    width: min(250px, 68vw);
-    bottom: 4px;
+    left: 0;
+    width: 130px;
+    height: 200px;
+    bottom: auto;
+    top: 42%;
   }
 
   .hero-hand img {
-    clip-path: inset(0 5% 0 32%);
-    margin-left: -22%;
-    transform: rotate(-20deg);
+    left: -58%;
+    width: 260px;
+    bottom: -10%;
+    transform: rotate(-26deg);
   }
 
   .social-figma {
     justify-content: center;
-  }
-
-  .cabinet-head {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .cabinet-name {
@@ -988,9 +1020,7 @@ p {
 
 @media (max-width: 420px) {
   .nav-glass {
-    font-size: 0.9rem;
-    padding: 11px 12px;
-    min-width: 112px;
+    font-size: 0.88rem;
   }
 
   .logo {
@@ -998,13 +1028,14 @@ p {
   }
 
   .hero-hand {
-    left: -30%;
-    width: min(230px, 72vw);
+    width: 120px;
+    height: 180px;
+    top: 48%;
   }
 
   .hero-hand img {
-    clip-path: inset(0 4% 0 36%);
-    margin-left: -26%;
+    left: -62%;
+    width: 240px;
   }
 }
 

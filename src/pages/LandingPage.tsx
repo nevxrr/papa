@@ -33,6 +33,9 @@ export function LandingPage() {
 
       <main>
         <section className="shell hero-section">
+          <div className="hero-hand" aria-hidden>
+            <img src={handImg} alt="" />
+          </div>
           <div className="hero-layout">
             <div className="hero-copy">
               <h1 className="hero-title">
@@ -48,9 +51,6 @@ export function LandingPage() {
               <a href="#courses" className="cta-figma">
                 Посмотреть курсы
               </a>
-              <div className="hero-hand" aria-hidden>
-                <img src={handImg} alt="" />
-              </div>
             </div>
 
             <div className="portrait-block">

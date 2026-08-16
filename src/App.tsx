@@ -1,20 +1,26 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { Layout } from './components/Layout'
-import { NewOrderPage } from './pages/NewOrderPage'
-import { OrderDetailPage } from './pages/OrderDetailPage'
-import { OrdersPage } from './pages/OrdersPage'
-import { WarehousePage } from './pages/WarehousePage'
+import { LandingPage } from './pages/LandingPage'
+import {
+  BookingPage,
+  CabinetCourses,
+  CabinetHome,
+  CabinetLayout,
+  LessonsPage,
+  LoginPage,
+} from './pages/CabinetPages'
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<OrdersPage />} />
-        <Route path="orders/new" element={<NewOrderPage />} />
-        <Route path="orders/:id" element={<OrderDetailPage />} />
-        <Route path="warehouse" element={<WarehousePage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/cabinet/login" element={<LoginPage />} />
+      <Route path="/cabinet" element={<CabinetLayout />}>
+        <Route index element={<CabinetHome />} />
+        <Route path="courses" element={<CabinetCourses />} />
+        <Route path="lessons" element={<LessonsPage />} />
+        <Route path="booking" element={<BookingPage />} />
       </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

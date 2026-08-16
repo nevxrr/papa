@@ -1,11 +1,76 @@
-import { useState, type FormEvent } from 'react'
-import { Link, Navigate, Outlet } from 'react-router-dom'
+import { useState, type FormEvent, type ReactNode } from 'react'
+import { Link, NavLink, Navigate, Outlet } from 'react-router-dom'
 import {
   courses,
   formatDate,
   offlineSlots,
 } from '../data/content'
 import { useStore } from '../store/StoreContext'
+import { useScrolled } from '../components/LayoutBits'
+
+function CabinetHeader({ title }: { title?: string }) {
+  const { state, hasAccess, logout } = useStore()
+  const scrolled = useScrolled()
+  const level = hasAccess ? 'Ученица' : 'Новичок'
+
+  return (
+    <header className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
+      <div className="landing-header-inner">
+        <div className="cabinet-user">
+          <div className="avatar" aria-hidden />
+          <div>
+            <p className="cabinet-name">{title ?? state.userName}</p>
+            {!title && <p className="cabinet-level">{level}</p>}
+          </div>
+        </div>
+        <nav className="nav-row" aria-label="Кабинет">
+          <NavLink
+            to="/cabinet"
+            end
+            className={({ isActive }) => (isActive ? 'active' : undefined)}
+          >
+            Обзор
+          </NavLink>
+          {hasAccess && (
+            <>
+              <NavLink
+                to="/cabinet/lessons"
+                className={({ isActive }) => (isActive ? 'active' : undefined)}
+              >
+                Уроки
+              </NavLink>
+              <NavLink
+                to="/cabinet/booking"
+                className={({ isActive }) => (isActive ? 'active' : undefined)}
+              >
+                Запись
+              </NavLink>
+            </>
+          )}
+          <Link to="/">Главная</Link>
+          <button type="button" className="nav-logout" onClick={logout}>
+            Выйти
+          </button>
+        </nav>
+      </div>
+    </header>
+  )
+}
+
+function CabinetShell({
+  children,
+  title,
+}: {
+  children: ReactNode
+  title?: string
+}) {
+  return (
+    <div className="page page-blobs cabinet-shell">
+      <CabinetHeader title={title} />
+      <div className="shell shell-inner cabinet-body">{children}</div>
+    </div>
+  )
+}
 
 export function CabinetLayout() {
   const { isLoggedIn } = useStore()
@@ -56,30 +121,17 @@ export function LoginPage() {
 }
 
 export function CabinetHome() {
-  const { state, hasAccess, logout, isEnrolled } = useStore()
+  const { hasAccess, isEnrolled } = useStore()
   const owned = courses.filter((c) => isEnrolled(c.id))
-  const level = hasAccess ? 'Ученица' : 'Новичок'
 
   return (
-    <div className="cabinet-page">
-      <header className="cabinet-head">
-        <div className="cabinet-user">
-          <div className="avatar" aria-hidden />
-          <div>
-            <h1>{state.userName}</h1>
-            <p>{level}</p>
-          </div>
-        </div>
-        <button type="button" className="logout" onClick={logout}>
-          Выйти
-        </button>
-      </header>
-
+    <CabinetShell>
       {!hasAccess ? (
         <div className="lock-note glass-strong">
           <h2>Платформа пока закрыта</h2>
           <p>
-            Оплатите курс — и здесь появятся ближайшие занятия и онлайн-материалы.
+            Оплатите курс — и здесь появятся ближайшие занятия и
+            онлайн-материалы.
           </p>
           <Link to="/#courses" className="btn btn-pink">
             Выбрать курс
@@ -113,46 +165,36 @@ export function CabinetHome() {
           <section className="cabinet-section">
             <h2>Онлайн материал</h2>
             <div className="cabinet-cards">
-              {owned.flatMap((c) =>
-                c.lessons.slice(0, 2).map((lesson) => (
-                  <Link
-                    key={lesson.id}
-                    to="/cabinet/lessons"
-                    className="cabinet-card"
-                  >
-                    <div>
-                      <h3>{lesson.title}</h3>
-                      <p>
-                        {c.title} · {lesson.duration}
-                      </p>
-                    </div>
-                    <span className="chip">
-                      {lesson.type === 'video'
-                        ? 'Видео'
-                        : lesson.type === 'practice'
-                          ? 'Практика'
-                          : 'PDF'}
-                    </span>
-                  </Link>
-                )),
-              ).slice(0, 3)}
+              {owned
+                .flatMap((c) =>
+                  c.lessons.slice(0, 2).map((lesson) => (
+                    <Link
+                      key={lesson.id}
+                      to="/cabinet/lessons"
+                      className="cabinet-card"
+                    >
+                      <div>
+                        <h3>{lesson.title}</h3>
+                        <p>
+                          {c.title} · {lesson.duration}
+                        </p>
+                      </div>
+                      <span className="chip">
+                        {lesson.type === 'video'
+                          ? 'Видео'
+                          : lesson.type === 'practice'
+                            ? 'Практика'
+                            : 'PDF'}
+                      </span>
+                    </Link>
+                  )),
+                )
+                .slice(0, 3)}
             </div>
           </section>
-
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <Link to="/cabinet/lessons" className="btn btn-dark">
-              Все уроки
-            </Link>
-            <Link to="/cabinet/booking" className="btn btn-glass">
-              Запись офлайн
-            </Link>
-            <Link to="/" className="btn btn-glass">
-              На главную
-            </Link>
-          </div>
         </>
       )}
-    </div>
+    </CabinetShell>
   )
 }
 
@@ -161,7 +203,7 @@ export function LessonsPage() {
 
   if (!hasAccess) {
     return (
-      <div className="cabinet-page">
+      <CabinetShell title="Онлайн материал">
         <div className="lock-note glass-strong">
           <h2>Уроки закрыты</h2>
           <p>Оплатите курс, чтобы открыть онлайн-материалы.</p>
@@ -169,21 +211,14 @@ export function LessonsPage() {
             К курсам
           </Link>
         </div>
-      </div>
+      </CabinetShell>
     )
   }
 
   const owned = courses.filter((c) => isEnrolled(c.id))
 
   return (
-    <div className="cabinet-page">
-      <header className="cabinet-head">
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 500 }}>Онлайн материал</h1>
-        <Link to="/cabinet" className="muted">
-          ← В кабинет
-        </Link>
-      </header>
-
+    <CabinetShell title="Онлайн материал">
       {owned.map((course) => (
         <section key={course.id} className="cabinet-section">
           <h2>{course.title}</h2>
@@ -224,7 +259,7 @@ export function LessonsPage() {
           </div>
         </section>
       ))}
-    </div>
+    </CabinetShell>
   )
 }
 
@@ -235,7 +270,7 @@ export function BookingPage() {
 
   if (!hasAccess) {
     return (
-      <div className="cabinet-page">
+      <CabinetShell title="Ближайшие занятия">
         <div className="lock-note glass-strong">
           <h2>Запись на офлайн</h2>
           <p>Доступна после оплаты курса.</p>
@@ -243,19 +278,12 @@ export function BookingPage() {
             Оплатить курс
           </Link>
         </div>
-      </div>
+      </CabinetShell>
     )
   }
 
   return (
-    <div className="cabinet-page">
-      <header className="cabinet-head">
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 500 }}>Ближайшие занятия</h1>
-        <Link to="/cabinet" className="muted">
-          ← В кабинет
-        </Link>
-      </header>
-
+    <CabinetShell title="Ближайшие занятия">
       <label className="field" style={{ maxWidth: 320, marginBottom: 18 }}>
         <span>Телефон для подтверждения</span>
         <input
@@ -302,6 +330,6 @@ export function BookingPage() {
           Запись сохранена. Мы напишем перед занятием.
         </div>
       )}
-    </div>
+    </CabinetShell>
   )
 }

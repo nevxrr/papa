@@ -1,36 +1,29 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import telegramIcon from '../assets/figma/telegram.svg'
 import vkIcon from '../assets/figma/vk.svg'
 
-export function useScrolled(threshold = 24) {
-  const [scrolled, setScrolled] = useState(false)
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > threshold)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [threshold])
-  return scrolled
+export function LandingNav() {
+  return (
+    <nav className="nav-glass nav-sticky" aria-label="Разделы">
+      <a href="#courses">Курсы</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contacts">Контакты</a>
+      <NavLink to="/cabinet">Кабинет</NavLink>
+    </nav>
+  )
 }
 
 export function LandingHeader() {
-  const scrolled = useScrolled()
-
   return (
-    <header className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="landing-header-inner">
+    <>
+      <div className="shell landing-brand">
         <a href="#top" className="logo">
           NailCraft
         </a>
-        <nav className="nav-glass" aria-label="Разделы">
-          <a href="#courses">Курсы</a>
-          <a href="#reviews">Отзывы</a>
-          <a href="#contacts">Контакты</a>
-          <NavLink to="/cabinet">Кабинет</NavLink>
-        </nav>
       </div>
-    </header>
+      <LandingNav />
+    </>
   )
 }
 
@@ -41,22 +34,19 @@ export function PageChrome({
   children: ReactNode
   showBack?: boolean
 }) {
-  const scrolled = useScrolled()
   return (
     <div className="page">
-      <header className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
-        <div className="landing-header-inner">
-          <Link to="/" className="logo">
-            NailCraft
-          </Link>
-          <nav className="nav-glass" aria-label="Разделы">
-            <Link to="/#courses">Курсы</Link>
-            <Link to="/#reviews">Отзывы</Link>
-            <Link to="/#contacts">Контакты</Link>
-            <NavLink to="/cabinet">Кабинет</NavLink>
-          </nav>
-        </div>
-      </header>
+      <div className="shell landing-brand">
+        <Link to="/" className="logo">
+          NailCraft
+        </Link>
+      </div>
+      <nav className="nav-glass nav-sticky" aria-label="Разделы">
+        <Link to="/#courses">Курсы</Link>
+        <Link to="/#reviews">Отзывы</Link>
+        <Link to="/#contacts">Контакты</Link>
+        <NavLink to="/cabinet">Кабинет</NavLink>
+      </nav>
       <div className="shell shell-inner">
         {children}
         {showBack && (

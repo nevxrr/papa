@@ -6,16 +6,14 @@ import {
   offlineSlots,
 } from '../data/content'
 import { useStore } from '../store/StoreContext'
-import { useScrolled } from '../components/LayoutBits'
 
 function CabinetHeader({ title }: { title?: string }) {
   const { state, hasAccess, logout } = useStore()
-  const scrolled = useScrolled()
   const level = hasAccess ? 'Ученица' : 'Новичок'
 
   return (
-    <header className={`landing-header ${scrolled ? 'is-scrolled' : ''}`}>
-      <div className="landing-header-inner">
+    <>
+      <div className="shell landing-brand cabinet-brand">
         <div className="cabinet-user">
           <div className="avatar" aria-hidden />
           <div>
@@ -23,37 +21,37 @@ function CabinetHeader({ title }: { title?: string }) {
             {!title && <p className="cabinet-level">{level}</p>}
           </div>
         </div>
-        <nav className="nav-glass" aria-label="Кабинет">
-          <NavLink
-            to="/cabinet"
-            end
-            className={({ isActive }) => (isActive ? 'active' : undefined)}
-          >
-            Обзор
-          </NavLink>
-          {hasAccess && (
-            <>
-              <NavLink
-                to="/cabinet/lessons"
-                className={({ isActive }) => (isActive ? 'active' : undefined)}
-              >
-                Уроки
-              </NavLink>
-              <NavLink
-                to="/cabinet/booking"
-                className={({ isActive }) => (isActive ? 'active' : undefined)}
-              >
-                Запись
-              </NavLink>
-            </>
-          )}
-          <Link to="/">Главная</Link>
-          <button type="button" className="nav-logout" onClick={logout}>
-            Выйти
-          </button>
-        </nav>
       </div>
-    </header>
+      <nav className="nav-glass nav-sticky" aria-label="Кабинет">
+        <NavLink
+          to="/cabinet"
+          end
+          className={({ isActive }) => (isActive ? 'active' : undefined)}
+        >
+          Обзор
+        </NavLink>
+        {hasAccess && (
+          <>
+            <NavLink
+              to="/cabinet/lessons"
+              className={({ isActive }) => (isActive ? 'active' : undefined)}
+            >
+              Уроки
+            </NavLink>
+            <NavLink
+              to="/cabinet/booking"
+              className={({ isActive }) => (isActive ? 'active' : undefined)}
+            >
+              Запись
+            </NavLink>
+          </>
+        )}
+        <Link to="/">Главная</Link>
+        <button type="button" className="nav-logout" onClick={logout}>
+          Выйти
+        </button>
+      </nav>
+    </>
   )
 }
 

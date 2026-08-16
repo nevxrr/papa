@@ -311,11 +311,11 @@ p {
 .hero-hand {
   position: absolute;
   left: 0;
-  top: calc(100% - 34px);
+  top: calc(100% - 22px);
   bottom: auto;
   width: min(58vw, 240px);
   pointer-events: none;
-  z-index: 30;
+  z-index: 3;
   animation: float-y 5.5s ease-in-out infinite;
 }
 
@@ -325,8 +325,8 @@ p {
   height: auto;
   max-width: none;
   background: transparent;
-  /* выше + меньший угол: кончик ровно в левый нижний угол кнопки */
-  transform: translate(-40%, -22%) rotate(-18deg);
+  /* чуть ниже + угол побольше: кончик в левый нижний угол, текст не перекрывает */
+  transform: translate(-40%, -8%) rotate(-24deg);
   transform-origin: 100% 45%;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.12));
 }
@@ -996,11 +996,11 @@ p {
 
   .hero-hand {
     width: min(70vw, 230px);
-    top: calc(100% - 30px);
+    top: calc(100% - 20px);
   }
 
   .hero-hand img {
-    transform: translate(-36%, -20%) rotate(-16deg);
+    transform: translate(-36%, -6%) rotate(-22deg);
   }
 
   .social-figma {
@@ -1023,11 +1023,11 @@ p {
 
   .hero-hand {
     width: min(74vw, 210px);
-    top: calc(100% - 28px);
+    top: calc(100% - 18px);
   }
 
   .hero-hand img {
-    transform: translate(-34%, -18%) rotate(-15deg);
+    transform: translate(-34%, -4%) rotate(-22deg);
   }
 }
 

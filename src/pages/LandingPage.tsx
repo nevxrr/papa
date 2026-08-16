@@ -45,11 +45,13 @@ export function LandingPage() {
                 Вы получите не просто диплом, а готовый набор навыков для
                 старта карьеры уже на следующей неделе
               </p>
-              <a href="#courses" className="cta-figma">
-                Посмотреть курсы
-              </a>
-              <div className="hero-hand" aria-hidden>
-                <img src={handImg} alt="" />
+              <div className="cta-wrap">
+                <a href="#courses" className="cta-figma">
+                  Посмотреть курсы
+                </a>
+                <div className="hero-hand" aria-hidden>
+                  <img src={handImg} alt="" />
+                </div>
               </div>
             </div>
 
